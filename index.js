@@ -1,29 +1,38 @@
-const {bot} = require('./structures/client')
+const { Client, GatewayIntentBits } = require("discord.js");
+const { QuickDB } = require("quick.db");
 
-new bot()
+const db = new QuickDB();
 
-let errorsToIgnore = [10008]
+class bot extends Client {
+    constructor() {
+        super({
+            intents: [
+                GatewayIntentBits.Guilds,
+                GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.MessageContent
+            ]
+        });
 
-process.on('unhandledRejection', (reason, p) => {
-    if(errorsToIgnore.includes(reason.code)) return;
-    console.log(' [antiCrash] :: Unhandled Rejection/Catch');
-    console.log(reason, p);
-});
+        this.prefix = "&";
 
-process.on('uncaughtException', (err, origin) => {
-    if(errorsToIgnore.includes(err.code)) return;
-    console.log(' [antiCrash] :: Uncaught Exception/Catch');
-    console.log(err, origin);
-});
+        this.start();
+    }
 
-process.on('uncaughtExceptionMonitor', (err, origin) => {
-    if(errorsToIgnore.includes(err.code)) return;
-    console.log(' [antiCrash] :: Uncaught Exception/Catch (MONITOR)');
-    console.log(err, origin);
-});
+    async start() {
 
-process.on('multipleResolves', (type, promise, reason) => {
-    if(errorsToIgnore.includes(reason.code)) return;
-    console.log(' [antiCrash] :: Multiple Resolves');
-    console.log(type, promise, reason);
-});
+        try {
+            const prefix = await db.get("mainprefix");
+            if(prefix) this.prefix = prefix;
+        } catch(e) {
+            console.log("Erreur DB :", e);
+        }
+
+        this.on("ready", () => {
+            console.log(`✅ Bot connecté : ${this.user.tag}`);
+        });
+
+        this.login(process.env.TOKEN);
+    }
+}
+
+module.exports = { bot };
