@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits } = require("discord.js");
+const { Client, Intents } = require("discord.js");
 const { QuickDB } = require("quick.db");
 
 const db = new QuickDB();
@@ -7,9 +7,8 @@ class bot extends Client {
     constructor() {
         super({
             intents: [
-                GatewayIntentBits.Guilds,
-                GatewayIntentBits.GuildMessages,
-                GatewayIntentBits.MessageContent
+                Intents.FLAGS.GUILDS,
+                Intents.FLAGS.GUILD_MESSAGES
             ]
         });
 
@@ -22,8 +21,8 @@ class bot extends Client {
 
         try {
             const prefix = await db.get("mainprefix");
-            if(prefix) this.prefix = prefix;
-        } catch(e) {
+            if (prefix) this.prefix = prefix;
+        } catch (e) {
             console.log("Erreur DB :", e);
         }
 
@@ -31,7 +30,7 @@ class bot extends Client {
             console.log(`✅ Bot connecté : ${this.user.tag}`);
         });
 
-        this.login(process.env.TOKEN);
+        await this.login(process.env.TOKEN);
     }
 }
 
