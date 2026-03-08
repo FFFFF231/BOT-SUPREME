@@ -1,29 +1,29 @@
-const {bot} = require('./structures/client')
+const { bot } = require("./structures/client");
 
-new bot()
+new bot();
 
-let errorsToIgnore = [10008]
+const ignoredErrors = [10008];
 
-process.on('unhandledRejection', (reason, p) => {
-    if(errorsToIgnore.includes(reason.code)) return;
-    console.log(' [antiCrash] :: Unhandled Rejection/Catch');
-    console.log(reason, p);
+function shouldIgnore(error) {
+  return error && ignoredErrors.includes(error.code);
+}
+
+process.on("unhandledRejection", (reason, promise) => {
+  if (shouldIgnore(reason)) return;
+  console.error("[antiCrash] Unhandled Rejection:", reason);
 });
 
-process.on('uncaughtException', (err, origin) => {
-    if(errorsToIgnore.includes(err.code)) return;
-    console.log(' [antiCrash] :: Uncaught Exception/Catch');
-    console.log(err, origin);
+process.on("uncaughtException", (err) => {
+  if (shouldIgnore(err)) return;
+  console.error("[antiCrash] Uncaught Exception:", err);
 });
 
-process.on('uncaughtExceptionMonitor', (err, origin) => {
-    if(errorsToIgnore.includes(err.code)) return;
-    console.log(' [antiCrash] :: Uncaught Exception/Catch (MONITOR)');
-    console.log(err, origin);
+process.on("uncaughtExceptionMonitor", (err) => {
+  if (shouldIgnore(err)) return;
+  console.error("[antiCrash] Uncaught Exception Monitor:", err);
 });
 
-process.on('multipleResolves', (type, promise, reason) => {
-    if(errorsToIgnore.includes(reason.code)) return;
-    console.log(' [antiCrash] :: Multiple Resolves');
-    console.log(type, promise, reason);
+process.on("multipleResolves", (type, promise, reason) => {
+  if (shouldIgnore(reason)) return;
+  console.error("[antiCrash] Multiple Resolves:", type, reason);
 });
