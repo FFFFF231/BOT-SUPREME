@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "better-sqlite3": "^9.4.0",
     "discord-backup": "^3.2.1",
     "discord-banner": "^1.6.7",
     "discord-banners-js": "^1.0.3",
