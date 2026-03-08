@@ -1,5 +1,6 @@
 const { Client, Collection, Intents } = require('discord.js')
-const db = require('quick.db')
+const { QuickDB } = require("quick.db");
+const db = new QuickDB();
 const fs = require('fs')
 global.print = console.log
 
