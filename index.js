@@ -1,37 +1,29 @@
-const { Client, Intents } = require("discord.js");
-const { QuickDB } = require("quick.db");
+const {bot} = require('./structures/client')
 
-const db = new QuickDB();
+new bot()
 
-class bot extends Client {
-    constructor() {
-        super({
-            intents: [
-                Intents.FLAGS.GUILDS,
-                Intents.FLAGS.GUILD_MESSAGES
-            ]
-        });
+let errorsToIgnore = [10008]
 
-        this.prefix = "&";
+process.on('unhandledRejection', (reason, p) => {
+    if(errorsToIgnore.includes(reason.code)) return;
+    console.log(' [antiCrash] :: Unhandled Rejection/Catch');
+    console.log(reason, p);
+});
 
-        this.start();
-    }
+process.on('uncaughtException', (err, origin) => {
+    if(errorsToIgnore.includes(err.code)) return;
+    console.log(' [antiCrash] :: Uncaught Exception/Catch');
+    console.log(err, origin);
+});
 
-    async start() {
+process.on('uncaughtExceptionMonitor', (err, origin) => {
+    if(errorsToIgnore.includes(err.code)) return;
+    console.log(' [antiCrash] :: Uncaught Exception/Catch (MONITOR)');
+    console.log(err, origin);
+});
 
-        try {
-            const prefix = await db.get("mainprefix");
-            if (prefix) this.prefix = prefix;
-        } catch (e) {
-            console.log("Erreur DB :", e);
-        }
-
-        this.on("ready", () => {
-            console.log(`✅ Bot connecté : ${this.user.tag}`);
-        });
-
-        await this.login(process.env.TOKEN);
-    }
-}
-
-module.exports = { bot };
+process.on('multipleResolves', (type, promise, reason) => {
+    if(errorsToIgnore.includes(reason.code)) return;
+    console.log(' [antiCrash] :: Multiple Resolves');
+    console.log(type, promise, reason);
+});
