@@ -24,7 +24,7 @@ class bot extends Client {
         this.aliases = new Collection()
         this.loadCommands()
         this.loadEvents()
-        this.login(this.config.token)
+        this.login(process.env.TOKEN)
     }
 
     loadCommands() {
