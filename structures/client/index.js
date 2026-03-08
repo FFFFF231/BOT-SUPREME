@@ -24,6 +24,9 @@ class bot extends Client {
         this.aliases = new Collection()
         this.loadCommands()
         this.loadEvents()
+        this.on("ready", () => {
+    console.log(`✅ Connecté : ${this.user.tag}`);
+});
         console.log("Connexion du bot...");
         this.login(process.env.TOKEN)
     }
