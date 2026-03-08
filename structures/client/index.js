@@ -13,7 +13,7 @@ class bot extends Client {
         this.db = db
         this.color = "#1519f0"
         this.footer = "© SupremeBot | BotifyHost - Made By BNT Feujjj"
-        this.link = "https://discord.gg/yzX6mDqu"
+        this.link = "https://discord.gg/Udq7PrZGvR"
         this.prefix = db.get(`mainprefix`) || "&"
         this.dev = "BNT Feujjj"
         this.staff = ["876126492604641370"]
